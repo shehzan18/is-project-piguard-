@@ -158,20 +158,20 @@ def NotInject_eval(model, dataset_root="datasets/NotInject_one"):
     return overall_acc, one_acc, two_acc, three_acc
 
 def evaluate(model, dataset_root):
-    pint_acc, pint_benign_acc, pint_injection_acc = pint_evaluate(model, dataset_root)
+    # pint_acc, pint_benign_acc, pint_injection_acc = pint_evaluate(model, dataset_root)
     wild_acc = wildguard_eval(model, dataset_root)
     BIPIA_acc, BIPIA_text_acc, BIPIA_code_acc = BIPIA_eval(model, dataset_root)
     Notinject_acc, Notinject_one_acc, Notinject_two_acc, Notinject_three_acc = NotInject_eval(model, dataset_root)
 
-    benign_acc = (pint_benign_acc + wild_acc) / 2
-    injection_acc = (pint_injection_acc + BIPIA_acc) / 2
-    overall_acc = (Notinject_acc + benign_acc + injection_acc) / 3
+    # benign_acc = (pint_benign_acc + wild_acc) / 2
+    #injection_acc = (pint_injection_acc + BIPIA_acc) / 2
+    #overall_acc = (Notinject_acc + benign_acc + injection_acc) / 3
 
     print(f"================================ The Results ================================")
     print(f"Over-defense ACC: {Notinject_acc}")
-    print(f"Benign ACC: {benign_acc}")
-    print(f"Injection ACC: {injection_acc}")
-    print(f"Overall ACC: {overall_acc}")
+    # print(f"Benign ACC: {benign_acc}")
+    # print(f"Injection ACC: {injection_acc}")
+    # print(f"Overall ACC: {overall_acc}")
 
 
 if __name__ == "__main__":

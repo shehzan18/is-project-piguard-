@@ -1,3 +1,8 @@
-datasets/PINT.json
-__pycache__
-logs
+datasets/
+logs/
+__pycache__/
+eval_backup.py
+results.txt
+
+.DS_Store
+Thumbs.db

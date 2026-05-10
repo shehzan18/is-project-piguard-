@@ -158,3 +158,228 @@ If you find this work useful in your research or applications, we appreciate tha
   year={2025}
 }
 ```
+# PIGuard Reproduction & PIGuard++ Experimental Extension
+
+## Overview
+
+This project reproduces the core findings of the **PIGuard** research paper on prompt injection detection and extends it with an experimental variant (**PIGuard++**) to explore improvements in malicious prompt detection.
+
+Prompt injection attacks attempt to manipulate LLM behavior through malicious instructions embedded in user prompts. The original PIGuard paper addresses a major issue in prompt injection detection called **over-defense**, where benign prompts containing suspicious keywords are incorrectly flagged as malicious.
+
+This repository contains:
+
+* Reproduction of the original PIGuard experiments
+* Ablation study of **MOF (Mitigation of Over-defense via Fine-grained sampling)**
+* Experimental extension (**PIGuard++**) using focal loss + adversarial prompt augmentation
+* Evaluation scripts and result visualizations
+* Project report and original research paper
+
+---
+
+## Research Paper
+
+Original paper included in `/docs`.
+
+**Paper Title:** PIGuard: Effective Prompt Injection Guarding for LLMs
+
+---
+
+## Project Structure
+
+```text
+injecguard/
+├── assets/
+├── docs/
+│   ├── project_report.pdf
+│   └── research_paper.pdf
+├── results_charts/
+├── eval.py
+├── eval_hf.py
+├── generate_hard_attacks.py
+├── params.py
+├── PIGuard.py
+├── plot_results.py
+├── train.py
+├── train_piguard_plus.py
+├── util.py
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
+
+---
+
+## Experimental Work Completed
+
+### 1. Baseline PIGuard Reproduction (WITH MOF)
+
+Reproduced the original PIGuard training pipeline using the provided implementation.
+
+**Results:**
+
+* NotInject: **84.96%**
+* WildGuard: **92.89%**
+* BIPIA: **50.00%**
+
+---
+
+### 2. MOF Ablation Study (WITHOUT MOF)
+
+Removed over-defense mitigation samples to validate the paper's core hypothesis.
+
+**Results:**
+
+* NotInject: **74.63%**
+* WildGuard: **83.01%**
+* BIPIA: **50.67%**
+
+**Observation:**
+MOF improved over-defense robustness significantly.
+
+---
+
+### 3. PIGuard++ Experimental Extension
+
+Implemented an experimental enhancement beyond the original paper.
+
+#### Modifications
+
+* **Focal Loss** for hard-example learning
+* **Synthetic adversarial malicious prompt augmentation**
+* Separate experimental trainer (`train_piguard_plus.py`)
+* Stability fixes for training/evaluation pipeline
+
+#### Focal Loss Formula
+
+[
+FL(p_t) = -\alpha (1-p_t)^\gamma \log(p_t)
+]
+
+Used:
+
+* alpha = 1.5
+* gamma = 2.0
+
+Purpose:
+
+* reduce focus on easy examples
+* emphasize difficult prompt injection cases
+
+---
+
+## PIGuard++ Results
+
+* NotInject: **71.68%**
+* WildGuard: **90.32%**
+* BIPIA: **51.33%**
+
+**Key Finding:**
+Naive adversarial augmentation slightly improved malicious detection but significantly worsened over-defense robustness.
+
+---
+
+## Comparison with Paper
+
+| Metric    | Paper PIGuard | Our Reproduction |
+| --------- | ------------- | ---------------- |
+| NotInject | 89.38%        | 84.96%           |
+| WildGuard | 76.11%        | 92.89%           |
+| BIPIA     | 68.34%        | 50.00%           |
+
+---
+
+## Installation
+
+### Clone Repository
+
+```bash
+git clone <your-repo-url>
+cd injecguard
+```
+
+### Create Environment
+
+```bash
+conda create -n piguard python=3.10 -y
+conda activate piguard
+```
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### PyTorch CUDA (RTX GPU)
+
+Example:
+
+```bash
+pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
+```
+
+---
+
+## Training
+
+### Original PIGuard
+
+```bash
+python train.py
+```
+
+### PIGuard++
+
+```bash
+python train_piguard_plus.py
+```
+
+---
+
+## Evaluation
+
+```bash
+python eval.py --resume <checkpoint_path>
+```
+
+---
+
+## Visualization
+
+Generate comparison charts:
+
+```bash
+python plot_results.py
+```
+
+Charts are saved in:
+
+```text
+results_charts/
+```
+
+---
+
+## Documentation
+
+Included in `/docs`:
+
+* project report
+* original research paper
+
+---
+
+## Key Takeaways
+
+* Successfully reproduced the core MOF claim from PIGuard
+* Demonstrated importance of over-defense mitigation
+* Built and evaluated an experimental extension (PIGuard++)
+* Identified trade-off between malicious sensitivity and benign robustness
+
+---
+
+## Author
+
+**Mohammad Shehzan**
+
+Machine Learning / AI Research Project
